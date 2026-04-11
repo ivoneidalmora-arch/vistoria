@@ -97,14 +97,8 @@
                      submitBtn.disabled = false;
                      submitBtn.textContent = 'Finalizar Cadastro';
                 }
-                else if(!data.session) {
-                    errorMsg.textContent = "Verifique seu e-mail para validar a conta (se aplicável), e então volte à página de login.";
-                    errorMsg.style.display = 'block';
-                    errorMsg.style.color = "var(--success)";
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Finalizar Cadastro';
-                } else {
-                    // Se não exigir confirmação (Auto login), vai pra tela principal
+                else {
+                    alert("Cadastro realizado com sucesso!\n\nSe necessário, verifique a caixa de entrada do seu e-mail para validar a conta antes de fazer o login.");
                     window.location.href = 'index.html';
                 }
             }
