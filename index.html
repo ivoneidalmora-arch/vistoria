@@ -96,6 +96,10 @@
                                 onclick="window.openModal('relatoriosModal')">
                                 <span class="btn-icon">📊</span> Relatório Avançado
                             </button>
+                            <button class="btn btn-outline btn-lg mt-4" style="background: rgba(255,255,255,0.05);"
+                                onclick="window.openModal('usuarioModal')">
+                                <span class="btn-icon">👤</span> Novo Usuário
+                            </button>
 
                             <div class="backup-actions"
                                 style="display: flex; gap: 1rem; margin-top: 0.5rem; flex-wrap: wrap;">
@@ -428,6 +432,27 @@
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal: Novo Usuário (Supabase TESTE) -->
+    <div id="usuarioModal" class="modal-backdrop">
+        <div class="modal glass-panel" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Cadastrar Usuário Rápido</h2>
+                <button class="close-btn" onclick="window.closeModal('usuarioModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="formUsuario">
+                    <div class="form-group">
+                        <label>Nome do Usuário</label>
+                        <input type="text" id="uNome" placeholder="Ex: Maria" required autofocus>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary full-width mt-4" id="btnSalvarUsuario">Salvar no Banco</button>
+                    <div id="msgUsuario" style="color: var(--success); text-align: center; margin-top: 1rem; font-size: 0.9rem; display: none;"></div>
+                </form>
             </div>
         </div>
     </div>

@@ -1062,5 +1062,62 @@ window.testInsertUser = async function(name, email) {
     }
 };
 
+// Captura a submissão do formulário na UI "Novo Usuário"
+document.addEventListener('DOMContentLoaded', () => {
+    const formUsuario = document.getElementById('formUsuario');
+    if (formUsuario) {
+        formUsuario.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('btnSalvarUsuario');
+            const msg = document.getElementById('msgUsuario');
+            const nomeInput = document.getElementById('uNome');
+            const name = nomeInput.value;
+            
+            // Gerar um email falso único (visto que o SQL exigia e-mail obrigatorio único)
+            // Se o usuário mudou o SQL para não exigir e-mail, pode passar null.
+            const fakeEmail = `${Date.now()}_${Math.floor(Math.random()*1000)}@auto.local`;
+            
+            btn.disabled = true;
+            btn.textContent = 'Salvando...';
+            msg.style.display = 'none';
+            
+            if (!supabase) {
+                msg.textContent = "Erro: Supabase desativado ou sem conexão.";
+                msg.style.color = "var(--danger)";
+                msg.style.display = 'block';
+                btn.disabled = false;
+                btn.textContent = 'Salvar no Banco';
+                return;
+            }
+
+            const { data, error } = await supabase
+                .from('users')
+                .insert([{ name: name, email: fakeEmail }])
+                .select()
+                .single();
+                
+            if (error) {
+                msg.textContent = `Erro do Banco: ${error.message}`;
+                msg.style.color = "var(--danger)";
+            } else {
+                msg.textContent = `Usuário '${data.name}' cadastrado!`;
+                msg.style.color = "var(--success)";
+                nomeInput.value = '';
+                
+                // Fecha a janela em 2 segundos
+                setTimeout(() => {
+                    msg.style.display = 'none';
+                    window.closeModal('usuarioModal');
+                }, 2000);
+            }
+            
+            msg.style.display = 'block';
+            btn.disabled = false;
+            btn.textContent = 'Salvar no Banco';
+        });
+    }
+});
+
 // Inicializa quando o arquivo carregar
 document.addEventListener('DOMContentLoaded', init);
