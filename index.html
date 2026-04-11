@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,54 +8,24 @@
     <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <!-- CSS -->
     <link rel="stylesheet" href="styles.css">
-    <!-- Chart.js -->
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- App Script -->
     <script src="app.js" defer></script>
 </head>
+
 <body class="dark-theme">
     <!-- Animated background layers -->
     <div class="bg-blur-1"></div>
     <div class="bg-blur-1"></div>
     <div class="bg-blur-2"></div>
 
-    <!-- Auth Container -->
-    <div class="auth-wrapper" id="authWrapper" style="display: flex; min-height: 100vh; align-items: center; justify-content: center; padding: 1.5rem;">
-        <div class="glass-panel" style="width: 100%; max-width: 400px; padding: 2.5rem 2rem;">
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <img src="logo.png" alt="Logo Alfa" style="height: 60px; margin-bottom: 1rem;">
-                <h2 style="font-size: 1.5rem;">Acesso ao Sistema</h2>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">Financeiro Alfa São Mateus</p>
-            </div>
-            
-            <form id="authForm">
-                <div class="form-group">
-                    <label>E-mail</label>
-                    <input type="email" id="authEmail" required placeholder="seu@email.com" style="text-transform: lowercase;">
-                </div>
-                <div class="form-group">
-                    <label>Senha</label>
-                    <input type="password" id="authPassword" required placeholder="••••••••">
-                </div>
-                
-                <button type="submit" class="btn btn-primary full-width mt-4" id="authSubmitBtn">Entrar</button>
-            </form>
-            
-            <div style="text-align: center; margin-top: 1.5rem;">
-                <button class="btn btn-outline full-width" id="showRegisterBtn" style="font-size: 0.85rem;" type="button">Não tem conta? Cadastrar</button>
-            </div>
-            <div id="authErrorMsg" style="color: var(--danger); font-size: 0.85rem; text-align: center; margin-top: 1rem; display: none;"></div>
-        </div>
-    </div>
-
     <!-- App Container -->
-    <div class="app-wrapper" id="appWrapper" style="display: none;">
+    <div class="app-wrapper" id="appWrapper">
         <!-- Navbar -->
         <nav class="glass-nav border-detran">
             <div class="logo">
@@ -67,16 +38,17 @@
                     <input type="number" id="vrteInput" value="4.50" step="0.01">
                 </div>
                 <div id="dateDisplay" class="date-display"></div>
-                <button class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="window.logout()">Sair</button>
             </div>
         </nav>
 
         <main class="container">
             <div id="lembretesContainer" class="lembretes-container"></div>
             <!-- Dashboard Resumo -->
-            <div class="header-overview" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+            <div class="header-overview"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
                 <h2 style="font-size: 1.25rem;">Visão Geral (<span id="spanMesAtual">Atual</span>)</h2>
-                <select id="monthSelector" class="month-selector" style="padding: 0.5rem 1rem; border-radius: 8px; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-family: inherit; font-size: 1rem; cursor: pointer; min-width: 180px; flex: 1; max-width: 300px;">
+                <select id="monthSelector" class="month-selector"
+                    style="padding: 0.5rem 1rem; border-radius: 8px; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-family: inherit; font-size: 1rem; cursor: pointer; min-width: 180px; flex: 1; max-width: 300px;">
                 </select>
             </div>
             <div class="dashboard-grid">
@@ -85,7 +57,9 @@
                     <div class="stat-info" style="flex: 1;">
                         <p id="labelBalance">Saldo do Mês</p>
                         <h2 id="currentBalance">R$ 0,00</h2>
-                        <div id="balanceDetails" style="font-size: 0.85rem; margin-top: 0.4rem; color: var(--text-muted); display: none;"></div>
+                        <div id="balanceDetails"
+                            style="font-size: 0.85rem; margin-top: 0.4rem; color: var(--text-muted); display: none;">
+                        </div>
                     </div>
                 </div>
                 <div class="stat-card glass-panel stat-income">
@@ -116,31 +90,42 @@
                             <button class="btn btn-danger btn-lg" onclick="window.openModal('despesaModal')">
                                 <span class="btn-icon">-</span> Registrar Despesa
                             </button>
-                            <button class="btn btn-outline btn-lg mt-4" style="background: rgba(255,255,255,0.05);" onclick="window.openModal('relatoriosModal')">
+                            <button class="btn btn-outline btn-lg mt-4" style="background: rgba(255,255,255,0.05);"
+                                onclick="window.openModal('relatoriosModal')">
                                 <span class="btn-icon">📊</span> Relatório Avançado
                             </button>
-                            
-                            <div class="backup-actions" style="display: flex; gap: 1rem; margin-top: 0.5rem; flex-wrap: wrap;">
-                                <button class="btn btn-outline" style="flex: 1; min-width: 140px; font-size: 0.85rem; padding: 0.5rem;" title="Salvar arquivo no computador ou Google Drive" onclick="window.exportBackup()">
+
+                            <div class="backup-actions"
+                                style="display: flex; gap: 1rem; margin-top: 0.5rem; flex-wrap: wrap;">
+                                <button class="btn btn-outline"
+                                    style="flex: 1; min-width: 140px; font-size: 0.85rem; padding: 0.5rem;"
+                                    title="Salvar arquivo no computador ou Google Drive"
+                                    onclick="window.exportBackup()">
                                     💾 Fazer Backup
                                 </button>
-                                <button class="btn btn-outline" style="flex: 1; min-width: 140px; font-size: 0.85rem; padding: 0.5rem;" title="Restaurar de um arquivo de backup" onclick="document.getElementById('importBackup').click()">
+                                <button class="btn btn-outline"
+                                    style="flex: 1; min-width: 140px; font-size: 0.85rem; padding: 0.5rem;"
+                                    title="Restaurar de um arquivo de backup"
+                                    onclick="document.getElementById('importBackup').click()">
                                     📂 Importar Backup
                                 </button>
-                                <input type="file" id="importBackup" style="display:none" accept=".json" onchange="window.importBackup(event)">
+                                <input type="file" id="importBackup" style="display:none" accept=".json"
+                                    onchange="window.importBackup(event)">
                             </div>
                         </div>
                     </div>
 
                     <!-- Ranking Clientes -->
                     <div class="glass-panel" style="margin-top: 2rem; margin-bottom: 2rem;">
-                        <div class="list-header" style="border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 1rem; padding-bottom: 1rem;">
+                        <div class="list-header"
+                            style="border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 1rem; padding-bottom: 1rem;">
                             <h3 style="margin: 0; font-size: 1.1rem; font-weight: 500;">Top 10 Clientes (Mês)</h3>
                             <span style="font-size: 0.85rem; color: var(--text-muted);">Faturamento Líquido</span>
                         </div>
                         <div id="topClientsList" style="display: flex; flex-direction: column; gap: 0.8rem;">
                             <!-- JS vai injetar ranking aqui -->
-                            <div style="text-align: center; color: var(--text-muted); padding: 2rem 0; font-size: 0.9rem;">
+                            <div
+                                style="text-align: center; color: var(--text-muted); padding: 2rem 0; font-size: 0.9rem;">
                                 Nenhum cliente registrado neste mês.
                             </div>
                         </div>
@@ -161,9 +146,12 @@
                     <div class="list-header" style="flex-wrap: wrap; gap: 1rem;">
                         <h3>Histórico de Caixa</h3>
                         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                            <input type="text" id="searchPlaca" class="search-input" placeholder="Placa..." style="width: 100px; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-size: 0.9rem; font-family: inherit;">
-                            <input type="text" id="searchCliente" class="search-input" placeholder="Cliente..." style="width: 120px; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-size: 0.9rem; font-family: inherit;">
-                            <input type="text" id="searchDespesa" class="search-input" placeholder="Despesa..." style="width: 120px; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-size: 0.9rem; font-family: inherit;">
+                            <input type="text" id="searchPlaca" class="search-input" placeholder="Placa..."
+                                style="width: 100px; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-size: 0.9rem; font-family: inherit;">
+                            <input type="text" id="searchCliente" class="search-input" placeholder="Cliente..."
+                                style="width: 120px; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-size: 0.9rem; font-family: inherit;">
+                            <input type="text" id="searchDespesa" class="search-input" placeholder="Despesa..."
+                                style="width: 120px; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-size: 0.9rem; font-family: inherit;">
                             <button class="btn-clear" onclick="window.clearData()">Zerar Tudo</button>
                         </div>
                     </div>
@@ -183,12 +171,16 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <!-- Controles de Paginação -->
-                    <div id="paginationControls" style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--glass-border);">
-                        <button class="btn btn-outline" id="btnPrevPage" style="padding: 0.4rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem;">Anterior</button>
-                        <span id="pageInfo" style="font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">Página 1</span>
-                        <button class="btn btn-outline" id="btnNextPage" style="padding: 0.4rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem;">Próxima</button>
+                    <div id="paginationControls"
+                        style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--glass-border);">
+                        <button class="btn btn-outline" id="btnPrevPage"
+                            style="padding: 0.4rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem;">Anterior</button>
+                        <span id="pageInfo"
+                            style="font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">Página 1</span>
+                        <button class="btn btn-outline" id="btnNextPage"
+                            style="padding: 0.4rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem;">Próxima</button>
                     </div>
                 </div>
             </div>
@@ -196,7 +188,7 @@
     </div>
 
     <!-- Modais -->
-    
+
     <!-- Modal: Nova Vistoria (Receita) -->
     <div id="vistoriaModal" class="modal-backdrop">
         <div class="modal glass-panel">
@@ -209,7 +201,8 @@
                     <div class="form-row">
                         <div class="form-group flex-1">
                             <label>Tipo de Vistoria</label>
-                            <select id="vTipo" required onchange="if(this.value === 'Vistoria de Retorno') { document.getElementById('vValorBruto').value='0.00'; document.getElementById('vValorLiquido').value='0.00'; document.getElementById('vValorBruto').readOnly = true; document.getElementById('vValorLiquido').readOnly = true; } else { document.getElementById('vValorBruto').readOnly = false; document.getElementById('vValorLiquido').readOnly = false; }">
+                            <select id="vTipo" required
+                                onchange="if(this.value === 'Vistoria de Retorno') { document.getElementById('vValorBruto').value='0.00'; document.getElementById('vValorLiquido').value='0.00'; document.getElementById('vValorBruto').readOnly = true; document.getElementById('vValorLiquido').readOnly = true; } else { document.getElementById('vValorBruto').readOnly = false; document.getElementById('vValorLiquido').readOnly = false; }">
                                 <option value="Vistoria Transferência">Vistoria Transferência</option>
                                 <option value="Vistoria de Entrada">Vistoria de Entrada</option>
                                 <option value="Vistoria Cautelar">Vistoria Cautelar</option>
@@ -220,7 +213,8 @@
                         </div>
                         <div class="form-group flex-1">
                             <label>Placa do Veículo (Opcional)</label>
-                            <input type="text" id="vPlaca" placeholder="ABC-1234" style="text-transform: uppercase;" maxlength="8">
+                            <input type="text" id="vPlaca" placeholder="ABC-1234" style="text-transform: uppercase;"
+                                maxlength="8">
                         </div>
                     </div>
 
@@ -234,7 +228,7 @@
                             <input type="text" id="vNF" placeholder="Nº da Nota">
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Forma de Pagamento</label>
                         <select id="vPagamento" required>
@@ -249,14 +243,16 @@
                             <label>Valor Bruto (R$)</label>
                             <div class="val-input-wrapper">
                                 <span class="currency-symbol">R$</span>
-                                <input type="number" id="vValorBruto" step="0.01" min="0" required placeholder="0.00" class="input-lg">
+                                <input type="number" id="vValorBruto" step="0.01" min="0" required placeholder="0.00"
+                                    class="input-lg">
                             </div>
                         </div>
                         <div class="form-group flex-1 val-group">
                             <label>Valor Líquido (R$)</label>
                             <div class="val-input-wrapper">
                                 <span class="currency-symbol" style="color:var(--success)">R$</span>
-                                <input type="number" id="vValorLiquido" step="0.01" min="0" required placeholder="0.00" class="input-lg text-success">
+                                <input type="number" id="vValorLiquido" step="0.01" min="0" required placeholder="0.00"
+                                    class="input-lg text-success">
                             </div>
                         </div>
                     </div>
@@ -313,7 +309,7 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Descrição / Referência</label>
                         <input type="text" id="dDescricao" placeholder="Ex: Pagamento referente a NF 2024" required>
@@ -323,7 +319,8 @@
                         <label>Valor Pago (R$)</label>
                         <div class="val-input-wrapper">
                             <span class="currency-symbol" style="color:var(--danger)">R$</span>
-                            <input type="number" id="dValor" step="0.01" min="0.01" required placeholder="0.00" class="input-lg text-danger" style="font-size: 1.4rem;">
+                            <input type="number" id="dValor" step="0.01" min="0.01" required placeholder="0.00"
+                                class="input-lg text-danger" style="font-size: 1.4rem;">
                         </div>
                     </div>
 
@@ -356,7 +353,8 @@
                 <button class="close-btn" onclick="window.closeModal('relatoriosModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="formRelatorio" class="form-row" style="align-items: flex-end; margin-bottom: 2rem; flex-wrap: wrap;">
+                <form id="formRelatorio" class="form-row"
+                    style="align-items: flex-end; margin-bottom: 2rem; flex-wrap: wrap;">
                     <div class="form-group flex-1" style="min-width: 150px;">
                         <label>Tipo</label>
                         <select id="rTipo">
@@ -378,18 +376,21 @@
                         <input type="text" id="rCliente" placeholder="Nome ou Documento">
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary" style="height: 48px; padding: 0 2rem;">Gerar</button>
+                        <button type="submit" class="btn btn-primary"
+                            style="height: 48px; padding: 0 2rem;">Gerar</button>
                     </div>
                 </form>
 
                 <div id="relatorioResultados" style="display: none;">
                     <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
-                        <button type="button" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="window.exportReportCSV()">
+                        <button type="button" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.9rem;"
+                            onclick="window.exportReportCSV()">
                             📥 Exportar Planilha (CSV)
                         </button>
                     </div>
-                    <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 1.5rem; gap: 1rem;">
-                         <div class="stat-card glass-panel stat-income" style="padding: 1rem;">
+                    <div class="dashboard-grid"
+                        style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 1.5rem; gap: 1rem;">
+                        <div class="stat-card glass-panel stat-income" style="padding: 1rem;">
                             <div class="stat-info">
                                 <p style="font-size: 0.8rem;">Receitas Brutas</p>
                                 <h2 id="rTotalReceitas" style="font-size: 1.5rem;">R$ 0,00</h2>
@@ -429,4 +430,5 @@
         </div>
     </div>
 </body>
+
 </html>
