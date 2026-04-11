@@ -1098,6 +1098,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const authForm = document.getElementById('authForm');
     const authErrorMsg = document.getElementById('authErrorMsg');
     const authSubmitBtn = document.getElementById('authSubmitBtn');
+    const showRegisterBtn = document.getElementById('showRegisterBtn');
+    
+    if(showRegisterBtn) {
+        showRegisterBtn.addEventListener('click', () => {
+            isRegistering = !isRegistering;
+            authSubmitBtn.textContent = isRegistering ? 'Criar Conta' : 'Entrar';
+            showRegisterBtn.textContent = isRegistering ? 'Já tem conta? Entrar' : 'Não tem conta? Cadastrar';
+            authErrorMsg.style.display = 'none';
+        });
+    }
 
     if (authForm) {
         authForm.addEventListener('submit', async (e) => {
@@ -1117,23 +1127,39 @@ document.addEventListener('DOMContentLoaded', () => {
             authErrorMsg.style.display = 'none';
             authErrorMsg.style.color = "var(--danger)";
 
-            let result = await supabase.auth.signInWithPassword({ email, password });
+            let result;
+            if(isRegistering) {
+                result = await supabase.auth.signUp({ email, password });
+            } else {
+                result = await supabase.auth.signInWithPassword({ email, password });
+            }
+            
             const { data, error } = result;
 
             if (error) {
                 // Traduções básicas de erros comuns (opcional)
                 let msg = error.message;
                 if (msg === "Invalid login credentials") msg = "E-mail ou senha incorretos!";
+                if (msg.includes("User already registered")) msg = "Este e-mail já está em uso.";
+                if (msg.includes("weak")) msg = "A senha deve ter pelo menos 6 caracteres.";
                 
                 authErrorMsg.textContent = msg;
                 authErrorMsg.style.display = 'block';
                 authSubmitBtn.disabled = false;
-                authSubmitBtn.textContent = 'Entrar';
+                authSubmitBtn.textContent = isRegistering ? 'Criar Conta' : 'Entrar';
             } else {
-                // onAuthStateChange lidará com as telas de sucesso
-                authSubmitBtn.disabled = false;
-                authSubmitBtn.textContent = 'Entrar';
-                authForm.reset();
+                if(isRegistering && !data.session) {
+                    authErrorMsg.textContent = "Verifique seu e-mail para validar a conta!";
+                    authErrorMsg.style.display = 'block';
+                    authErrorMsg.style.color = "var(--success)";
+                    authSubmitBtn.disabled = false;
+                    authSubmitBtn.textContent = 'Criar Conta';
+                } else {
+                    // onAuthStateChange lidará com as telas de sucesso
+                    authSubmitBtn.disabled = false;
+                    authSubmitBtn.textContent = isRegistering ? 'Criar Conta' : 'Entrar';
+                    authForm.reset();
+                }
             }
         });
     }
