@@ -1023,5 +1023,44 @@ function updateLembretes() {
     }).join('');
 }
 
+// --- API Customizada Supabase (Apenas Teste de Tabela) ---
+const supabaseUrl = 'https://zlvvkltsefsytzqjorsn.supabase.co';
+const supabaseKey = 'sb_publishable_dCNKa32V358Zsfpmo1Bj_A_gnfBpsVz';
+let supabase = null;
+
+// Garante injeção se a biblioteca já tiver carregado pelo CDN
+if (window.supabase) {
+    supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+}
+
+// Função de Teste para o console Javascript ou botões
+window.testInsertUser = async function(name, email) {
+    if (!supabase) {
+        console.error("Supabase CDN não foi carregado a tempo.");
+        alert("Erro: Biblioteca do Supabase não encontrada.");
+        return;
+    }
+
+    console.log(`Enviando para Supabase: Nome=${name}, Email=${email}`);
+
+    const { data, error } = await supabase
+        .from('users')
+        .insert([{ name, email }])
+        .select()
+        .single();
+
+    if (error) {
+        console.error("Falha ao inserir:", error);
+        if (error.code === '23505') {
+            alert(`Erro: O e-mail '${email}' já está cadastrado.`);
+        } else {
+            alert(`Erro do Banco: ${error.message}`);
+        }
+    } else {
+        console.log("Sucesso, usuário retornado:", data);
+        alert(`Usuário '${data.name}' inserido na tabela pública com sucesso!`);
+    }
+};
+
 // Inicializa quando o arquivo carregar
 document.addEventListener('DOMContentLoaded', init);
