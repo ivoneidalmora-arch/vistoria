@@ -39,9 +39,9 @@
         <main class="container">
             <div id="lembretesContainer" class="lembretes-container"></div>
             <!-- Dashboard Resumo -->
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <div class="header-overview" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
                 <h2 style="font-size: 1.25rem;">Visão Geral (<span id="spanMesAtual">Atual</span>)</h2>
-                <select id="monthSelector" style="padding: 0.5rem 1rem; border-radius: 8px; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-family: inherit; font-size: 1rem; cursor: pointer; min-width: 180px;">
+                <select id="monthSelector" class="month-selector" style="padding: 0.5rem 1rem; border-radius: 8px; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-family: inherit; font-size: 1rem; cursor: pointer; min-width: 180px; flex: 1; max-width: 300px;">
                 </select>
             </div>
             <div class="dashboard-grid">
@@ -85,11 +85,11 @@
                                 <span class="btn-icon">📊</span> Relatório Avançado
                             </button>
                             
-                            <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
-                                <button class="btn btn-outline" style="flex: 1; font-size: 0.85rem; padding: 0.5rem;" title="Salvar arquivo no computador ou Google Drive" onclick="window.exportBackup()">
+                            <div class="backup-actions" style="display: flex; gap: 1rem; margin-top: 0.5rem; flex-wrap: wrap;">
+                                <button class="btn btn-outline" style="flex: 1; min-width: 140px; font-size: 0.85rem; padding: 0.5rem;" title="Salvar arquivo no computador ou Google Drive" onclick="window.exportBackup()">
                                     💾 Fazer Backup
                                 </button>
-                                <button class="btn btn-outline" style="flex: 1; font-size: 0.85rem; padding: 0.5rem;" title="Restaurar de um arquivo de backup" onclick="document.getElementById('importBackup').click()">
+                                <button class="btn btn-outline" style="flex: 1; min-width: 140px; font-size: 0.85rem; padding: 0.5rem;" title="Restaurar de um arquivo de backup" onclick="document.getElementById('importBackup').click()">
                                     📂 Importar Backup
                                 </button>
                                 <input type="file" id="importBackup" style="display:none" accept=".json" onchange="window.importBackup(event)">
@@ -126,9 +126,9 @@
                     <div class="list-header" style="flex-wrap: wrap; gap: 1rem;">
                         <h3>Histórico de Caixa</h3>
                         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                            <input type="text" id="searchPlaca" placeholder="Placa..." style="width: 100px; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-size: 0.9rem; font-family: inherit;">
-                            <input type="text" id="searchCliente" placeholder="Cliente..." style="width: 120px; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-size: 0.9rem; font-family: inherit;">
-                            <input type="text" id="searchDespesa" placeholder="Despesa..." style="width: 120px; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-size: 0.9rem; font-family: inherit;">
+                            <input type="text" id="searchPlaca" class="search-input" placeholder="Placa..." style="width: 100px; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-size: 0.9rem; font-family: inherit;">
+                            <input type="text" id="searchCliente" class="search-input" placeholder="Cliente..." style="width: 120px; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-size: 0.9rem; font-family: inherit;">
+                            <input type="text" id="searchDespesa" class="search-input" placeholder="Despesa..." style="width: 120px; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-size: 0.9rem; font-family: inherit;">
                             <button class="btn-clear" onclick="window.clearData()">Zerar Tudo</button>
                         </div>
                     </div>
