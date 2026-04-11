@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Financeiro Alfa São Mateus</title>
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="dark-theme">
+    <!-- Animated background layers -->
+    <div class="bg-blur-1"></div>
+    <div class="bg-blur-2"></div>
+
+    <div class="auth-wrapper" style="display: flex; min-height: 100vh; align-items: center; justify-content: center; padding: 1.5rem;">
+        <div class="glass-panel" style="width: 100%; max-width: 400px; padding: 2.5rem 2rem;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <img src="logo.png" onerror="this.style.display='none'" alt="Logo Alfa" style="height: 60px; margin-bottom: 1rem;">
+                <h2 style="font-size: 1.5rem;">Criar Nova Conta</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Preencha os dados abaixo</p>
+            </div>
+            
+            <form id="registerForm">
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" id="regEmail" required placeholder="seu@email.com" style="text-transform: lowercase;">
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="regPassword" required placeholder="Mínimo 6 caracteres" minlength="6">
+                </div>
+                <div class="form-group">
+                    <label>Confirmar Senha</label>
+                    <input type="password" id="regPasswordConfirm" required placeholder="Repita a senha" minlength="6">
+                </div>
+                
+                <button type="submit" class="btn btn-primary full-width mt-4" id="regSubmitBtn">Finalizar Cadastro</button>
+            </form>
+            
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <a href="index.html" class="btn btn-outline full-width" style="font-size: 0.85rem; text-decoration: none; display: flex;">Já tem conta? Cadastre-se/Entrar</a>
+            </div>
+            <div id="regErrorMsg" style="color: var(--danger); font-size: 0.85rem; text-align: center; margin-top: 1rem; display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Utilizando as chaves do banco de dados configuradas pelo usuário
+        const supabaseUrl = 'https://zlvvkltsefsytzqjorsn.supabase.co';
+        const supabaseKey = 'sb_publishable_dCNKa32V358Zsfpmo1Bj_A_gnfBpsVz';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regPasswordConfirm').value;
+            const errorMsg = document.getElementById('regErrorMsg');
+            const submitBtn = document.getElementById('regSubmitBtn');
+
+            if (password !== confirm) {
+                errorMsg.textContent = "As senhas não coincidem.";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Aguarde...';
+            errorMsg.style.display = 'none';
+            errorMsg.style.color = "var(--danger)";
+
+            // Chamada de API Supabase Auth para Registro
+            const { data, error } = await supabase.auth.signUp({ email, password });
+
+            if (error) {
+                let msg = error.message;
+                if(msg.includes("User already registered")) msg = "Este e-mail já está em uso.";
+                if(msg.includes("weak")) msg = "A senha deve ter pelo menos 6 caracteres.";
+                
+                errorMsg.textContent = msg;
+                errorMsg.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Finalizar Cadastro';
+            } else {
+                // Caso a configuração do painel do Supabase exija confirmação de e-mail (Comportamento Padrão)
+                if(data.user && data.user.identities && data.user.identities.length === 0) {
+                    // Usuário já existia e não pode reaproveitar
+                     errorMsg.textContent = "Este e-mail já está em uso.";
+                     errorMsg.style.display = 'block';
+                     submitBtn.disabled = false;
+                     submitBtn.textContent = 'Finalizar Cadastro';
+                }
+                else if(!data.session) {
+                    errorMsg.textContent = "Verifique seu e-mail para validar a conta (se aplicável), e então volte à página de login.";
+                    errorMsg.style.display = 'block';
+                    errorMsg.style.color = "var(--success)";
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Finalizar Cadastro';
+                } else {
+                    // Se não exigir confirmação (Auto login), vai pra tela principal
+                    window.location.href = 'index.html';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
