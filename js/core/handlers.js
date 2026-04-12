@@ -1,13 +1,34 @@
+// Função Utilitária Oculta para Registro de Ações (Auditoria)
+window.registrarLog = async function(acao, mensagem) {
+    try {
+        const session = JSON.parse(localStorage.getItem('alfa_session') || '{}');
+        const uId = session.id;
+        if (!uId || !window.supabaseClient) return;
+
+        await window.supabaseClient.from('LogsAuditoria').insert([{
+            user_id: uId,
+            acao: acao,
+            mensagem: mensagem
+        }]);
+    } catch (err) {
+        console.error("Falha silenciosa ao registrar log:", err);
+    }
+};
+
 window.deleteTransaction = async function (id) {
     if (confirm('Tem certeza que deseja apagar este lançamento?')) {
         const t = transactions.find(x => x.id === id);
         if(!t) return;
         
+        const labelItem = t.type === 'income' ? `Vistoria (${t.category} - ${t.placa||'Sem placa'})` : `Despesa (${t.category} - R$${t.amount})`;
+
         if(t.dbType === 'Receitas') {
             await window.supabaseClient.from('Receitas').delete().eq('id', id);
         } else if (t.dbType === 'Despesas') {
             await window.supabaseClient.from('Despesas').delete().eq('id', id);
         }
+
+        await registrarLog("DELETAR", `O usuário apagou o registro de ${labelItem}`);
 
         transactions = transactions.filter(t => t.id !== id);
         updateUI();
@@ -62,6 +83,9 @@ window.markAsPaid = async function (id) {
             await window.supabaseClient.from('Despesas').update({ status: 'Pago' }).eq('id', id);
         }
         t.status = 'Pago';
+
+        await registrarLog("PAGAMENTO_BAIXADO", `A despesa "${t.category}" no valor de R$${t.amount} foi formalizada como PAGA.`);
+
         updateUI();
     }
 };
@@ -70,6 +94,7 @@ window.addTransaction = async function(data) {
     const session = JSON.parse(localStorage.getItem('alfa_session') || '{}');
     const uId = session.id;
 
+    // FLUXO DE ATUALIZAÇAO (EDIÇÃO)
     if (editingTransactionId) {
         const index = transactions.findIndex(t => t.id === editingTransactionId);
         if (index !== -1) {
@@ -83,6 +108,9 @@ window.addTransaction = async function(data) {
                 await window.supabaseClient.from('Despesas').update(payload).eq('id', editingTransactionId);
             }
 
+            const labelItem = data.type === 'income' ? `Vistoria (${data.category} - ${data.placa||'s/placa'})` : `Despesa (${data.category})`;
+            await registrarLog("ATUALIZAR", `Valores/Dados atualizados para o registro: ${labelItem}`);
+
             transactions[index] = { ...transactions[index], ...data };
             if (data.date) {
                 const dateStr = data.date.includes('T') ? data.date.split('T')[0] : data.date;
@@ -94,7 +122,7 @@ window.addTransaction = async function(data) {
         }
     }
 
-    // É um registro inteiramente novo
+    // FLUXO DE CRIAÇÃO (NOVO REGISTRO)
     let payload = { ...data, user_id: uId };
     let tableName = (data.type === 'income') ? 'Receitas' : 'Despesas';
     delete payload.type; 
@@ -115,6 +143,9 @@ window.addTransaction = async function(data) {
             ...data
         };
         transactions.push(localFormat);
+
+        const labelItem = data.type === 'income' ? `Vistoria (${data.category} - ${data.placa||'Sem placa'}) no valor R$${data.amountBruto}` : `Despesa (${data.category}) no valor R$${data.amount}`;
+        await registrarLog("CRIAR", `Novo Lançamento cadastrado: ${labelItem}`);
     }
 
     if (data.date) {
