@@ -198,7 +198,7 @@
                 } else if (err.message && (err.message.includes("URL is required") || SUPABASE_URL === 'SUA_SUPABASE_URL_AQUI')) {
                     showMessage('Erro: Você precisa configurar suas credenciais do Supabase.', 'error');
                 } else {
-                    showMessage('Erro ao cadastrar. Verifique sua conexão.', 'error');
+                    showMessage('Erro do Banco: ' + (err.message || JSON.stringify(err)), 'error');
                 }
 
                 // Restaura o botão ao estado original (APENAS se der erro)
