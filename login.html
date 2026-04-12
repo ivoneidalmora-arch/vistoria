@@ -71,12 +71,12 @@
         <!-- Login Card -->
         <div class="glass-card rounded-2xl shadow-2xl p-8">
             <form id="loginForm" class="space-y-6">
-                <!-- Nome de Usuário -->
+                <!-- E-mail -->
                 <div>
-                    <label for="username" class="block text-sm font-medium text-slate-300 mb-1">Nome de Usuário</label>
-                    <input type="text" id="username" name="username" required
+                    <label for="email" class="block text-sm font-medium text-slate-300 mb-1">E-mail</label>
+                    <input type="email" id="email" name="email" required
                         class="w-full px-4 py-3 rounded-lg bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
-                        placeholder="ex: joao.silva">
+                        placeholder="ex: contato@email.com">
                 </div>
 
                 <!-- Senha -->
@@ -136,11 +136,11 @@
             e.preventDefault();
             messageBox.classList.add('hidden');
 
-            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
 
-            if (!username || !password) {
-                showMessage('Por favor, informe seu nome de usuário e senha.', 'error');
+            if (!email || !password) {
+                showMessage('Por favor, informe seu e-mail e senha.', 'error');
                 return;
             }
 
@@ -152,10 +152,10 @@
             try {
                 // Busca o usuário na tabela
                 const { data, error } = await supabase
-                    .from('perfis_usuarios')
+                    .from('Usuarios')
                     .select('*')
-                    .eq('nome_usuario', username)
-                    .eq('senha', password)
+                    .eq('Email', email)
+                    .eq('SenhaHash', password)
                     .single();
 
                 if (error || !data) {
@@ -163,11 +163,11 @@
                     throw new Error('Usuário não encontrado ou senha incorreta.');
                 }
 
-                // Autenticação mockada com sucesso (salva sessão no localStorage)
+                // Autenticação com sucesso (salva sessão no localStorage)
                 localStorage.setItem('alfa_session', JSON.stringify({
-                    id: data.id,
-                    username: data.nome_usuario,
-                    fullName: data.nome_completo
+                    id: data.Id,
+                    username: data.Email,
+                    fullName: data.NomeCompleto
                 }));
 
                 showMessage('Bem-vindo!', 'success');
