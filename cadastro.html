@@ -76,7 +76,7 @@
 
         <!-- Formulário Card -->
         <div class="glass-card rounded-2xl shadow-2xl p-8">
-            <form id="cadastroForm" class="space-y-6">
+            <form id="cadastroForm" class="space-y-6" novalidate>
                 
                 <!-- E-mail -->
                 <div>
@@ -186,9 +186,11 @@
                     throw error;
                 }
 
-                // Feedback visual de sucesso! Redirecionamento instantâneo
+                // Feedback visual de sucesso! Aguarda 2 segundos para o usuário ler a mensagem e só então redireciona.
                 showMessage('Cadastro realizado com sucesso! Redirecionando...', 'success');
-                window.location.href = 'login.html';
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
                 
             } catch (err) {
                 console.error("Erro no cadastro:", err);
