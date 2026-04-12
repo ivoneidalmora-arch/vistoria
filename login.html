@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro - Alfa Vistoria</title>
+    <title>Login - Financeiro Alfa São Mateus</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font -->
@@ -15,6 +15,11 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
+        // Redirecionar direto se já estiver logado
+        if (localStorage.getItem('alfa_session')) {
+            window.location.replace('index.html');
+        }
+
         tailwind.config = {
             theme: {
                 extend: {
@@ -41,27 +46,16 @@
             color: #f8fafc;
         }
         .glass-card {
-            background: rgba(30, 41, 59, 0.7); /* slate-800 com opacidade */
+            background: rgba(30, 41, 59, 0.7);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        /* Custom scrollbar para um visual mais limpo */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
         }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4 antialiased selection:bg-brand-500 selection:text-white">
 
-    <!-- Elementos visuais de background (Ambient Light) -->
+    <!-- Background elements -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none">
         <div class="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-brand-900/20 blur-[120px]"></div>
         <div class="absolute top-[60%] -right-[10%] w-[40%] h-[40%] rounded-full bg-blue-900/20 blur-[100px]"></div>
@@ -70,14 +64,13 @@
     <div class="w-full max-w-md relative z-10">
         <!-- Logo Area -->
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold tracking-tight text-white mb-2">Alfa Vistoria</h1>
-            <p class="text-slate-400">Criar novo perfil de acesso</p>
+            <h1 class="text-3xl font-bold tracking-tight text-white mb-2">Financeiro Alfa</h1>
+            <p class="text-slate-400">Faça o login para continuar</p>
         </div>
 
-        <!-- Formulário Card -->
+        <!-- Login Card -->
         <div class="glass-card rounded-2xl shadow-2xl p-8">
-            <form id="cadastroForm" class="space-y-6">
-                
+            <form id="loginForm" class="space-y-6">
                 <!-- Nome de Usuário -->
                 <div>
                     <label for="username" class="block text-sm font-medium text-slate-300 mb-1">Nome de Usuário</label>
@@ -86,64 +79,42 @@
                         placeholder="ex: joao.silva">
                 </div>
 
-                <!-- Nome Completo -->
-                <div>
-                    <label for="fullName" class="block text-sm font-medium text-slate-300 mb-1">Nome Completo</label>
-                    <input type="text" id="fullName" name="fullName" required
-                        class="w-full px-4 py-3 rounded-lg bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
-                        placeholder="João da Silva">
-                </div>
-
-                <!-- Setor -->
-                <div>
-                    <label for="sector" class="block text-sm font-medium text-slate-300 mb-1">Setor</label>
-                    <div class="relative">
-                        <select id="sector" name="sector" required
-                            class="w-full px-4 py-3 rounded-lg bg-slate-900/50 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all appearance-none cursor-pointer">
-                            <option value="" disabled selected>Selecione um setor...</option>
-                            <option value="Produção">Produção</option>
-                            <option value="Logística">Logística</option>
-                            <option value="Administrativo">Administrativo</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
-                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Messages de Alerta/Sucesso -->
+                <!-- Messages -->
                 <div id="messageBox" class="hidden rounded-lg p-4 text-sm font-medium text-center"></div>
 
                 <!-- Submit Button -->
                 <button type="submit" id="submitBtn"
-                    class="w-full bg-brand-600 hover:bg-brand-500 text-white font-semibold py-3 px-4 rounded-lg shadow-lg shadow-brand-500/20 hover:shadow-brand-500/40 transition-all flex justify-center items-center gap-2 group relative">
-                    <span id="btnText">Cadastrar</span>
-                    <!-- Spinner de Loading (oculto por padrão) -->
+                    class="w-full bg-brand-600 hover:bg-brand-500 text-white font-semibold py-3 px-4 rounded-lg shadow-lg hover:shadow-brand-500/40 transition-all flex justify-center items-center gap-2 group relative">
+                    <span id="btnText">Entrar no Sistema</span>
+                    <!-- Spinner (oculto por padrão) -->
                     <svg id="btnSpinner" class="animate-spin h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                 </button>
             </form>
+
+            <div class="mt-6 text-center text-sm text-slate-400">
+                Ainda não tem conta? <a href="cadastro.html" class="text-brand-400 hover:text-brand-300 transition-colors font-medium">Cadastre-se</a>
+            </div>
         </div>
     </div>
 
     <!-- Lógica de Funcionamento -->
     <script>
         // ======= CONFIGURAÇÃO SUPABASE =======
-        // ATENÇÃO: Substitua aqui pela sua URL real e Chave Anônima do Supabase
+        // IMPORTANTE: Insira a mesma URL e KEY usada no cadastro.html
         const SUPABASE_URL = https://zlvvkltsefsytzqjorsn.supabase.co;
         const SUPABASE_KEY = sb_publishable_dCNKa32V358Zsfpmo1Bj_A_gnfBpsVz;
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         // =====================================
 
-        const form = document.getElementById('cadastroForm');
+        const form = document.getElementById('loginForm');
         const submitBtn = document.getElementById('submitBtn');
         const btnText = document.getElementById('btnText');
         const btnSpinner = document.getElementById('btnSpinner');
         const messageBox = document.getElementById('messageBox');
 
-        // Função auxiliar para exibir mensagens de sucesso ou erro
         function showMessage(msg, type) {
             messageBox.textContent = msg;
             messageBox.className = `rounded-lg p-4 text-sm font-medium mt-4 block transition-all ${
@@ -155,61 +126,58 @@
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            // Oculta a caixa de mensagem anterior
             messageBox.classList.add('hidden');
 
             const username = document.getElementById('username').value.trim();
-            const fullName = document.getElementById('fullName').value.trim();
-            const sector = document.getElementById('sector').value;
 
-            // Validação simples
-            if (!username || !fullName || !sector) {
-                showMessage('Por favor, preencha todos os campos corretamente.', 'error');
+            if (!username) {
+                showMessage('Por favor, informe seu nome de usuário.', 'error');
                 return;
             }
 
-            // Ativa visual de "Carregando"
             submitBtn.disabled = true;
             submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
-            btnText.textContent = 'Processando...';
+            btnText.textContent = 'Verificando...';
             btnSpinner.classList.remove('hidden');
 
             try {
-                // Inserindo direto no Supabase, na tabela perfis_usuarios
+                // Busca o usuário na tabela
                 const { data, error } = await supabase
                     .from('perfis_usuarios')
-                    .insert([
-                        { 
-                            nome_usuario: username, 
-                            nome_completo: fullName, 
-                            setor: sector 
-                        }
-                    ]);
+                    .select('*')
+                    .eq('nome_usuario', username)
+                    .single();
 
-                if (error) {
-                    throw error;
+                if (error || !data) {
+                    throw new Error('Usuário não encontrado.');
                 }
 
-                // Feedback visual de sucesso!
-                showMessage('Cadastro realizado com sucesso!', 'success');
+                // Autenticação mockada com sucesso (salva sessão no localStorage)
+                localStorage.setItem('alfa_session', JSON.stringify({
+                    id: data.id,
+                    username: data.nome_usuario,
+                    fullName: data.nome_completo,
+                    sector: data.setor
+                }));
+
+                showMessage('Bem-vindo!', 'success');
                 
-                // Limpa o formulário após salvar com sucesso
-                form.reset();
+                // Redireciona para o financeiro
+                setTimeout(() => {
+                    window.location.replace('index.html');
+                }, 800);
                 
             } catch (err) {
-                console.error("Erro no cadastro:", err);
-                // Aqui estamos tratando possíveis erros, como a falta das credenciais do Supabase
+                console.error("Erro no login:", err);
                 if (err.message.includes("URL is required") || SUPABASE_URL === 'SUA_SUPABASE_URL_AQUI') {
-                    showMessage('Erro: Você precisa configurar suas credenciais do Supabase no código (.html)', 'error');
+                    showMessage('Erro: Configure o Supabase no código do login.html.', 'error');
                 } else {
-                    showMessage('Erro ao cadastrar. Tente novamente.', 'error');
+                    showMessage('Usuário não encontrado ou erro de conexão.', 'error');
                 }
             } finally {
-                // Restaura o botão ao estado original
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
-                btnText.textContent = 'Cadastrar';
+                btnText.textContent = 'Entrar no Sistema';
                 btnSpinner.classList.add('hidden');
             }
         });
