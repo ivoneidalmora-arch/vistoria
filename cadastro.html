@@ -94,21 +94,12 @@
                         placeholder="João da Silva">
                 </div>
 
-                <!-- Setor -->
+                <!-- Senha -->
                 <div>
-                    <label for="sector" class="block text-sm font-medium text-slate-300 mb-1">Setor</label>
-                    <div class="relative">
-                        <select id="sector" name="sector" required
-                            class="w-full px-4 py-3 rounded-lg bg-slate-900/50 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all appearance-none cursor-pointer">
-                            <option value="" disabled selected>Selecione um setor...</option>
-                            <option value="Produção">Produção</option>
-                            <option value="Logística">Logística</option>
-                            <option value="Administrativo">Administrativo</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
-                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                        </div>
-                    </div>
+                    <label for="password" class="block text-sm font-medium text-slate-300 mb-1">Senha</label>
+                    <input type="password" id="password" name="password" required
+                        class="w-full px-4 py-3 rounded-lg bg-slate-900/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                        placeholder="••••••••">
                 </div>
 
                 <!-- Messages de Alerta/Sucesso -->
@@ -132,8 +123,8 @@
     <script>
         // ======= CONFIGURAÇÃO SUPABASE =======
         // ATENÇÃO: Substitua aqui pela sua URL real e Chave Anônima do Supabase
-        const SUPABASE_URL = https://zlvvkltsefsytzqjorsn.supabase.co;
-        const SUPABASE_KEY = sb_publishable_dCNKa32V358Zsfpmo1Bj_A_gnfBpsVz;
+        const SUPABASE_URL = 'https://zlvvkltsefsytzqjorsn.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_dCNKa32V358Zsfpmo1Bj_A_gnfBpsVz';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         // =====================================
 
@@ -161,10 +152,10 @@
 
             const username = document.getElementById('username').value.trim();
             const fullName = document.getElementById('fullName').value.trim();
-            const sector = document.getElementById('sector').value;
+            const password = document.getElementById('password').value;
 
             // Validação simples
-            if (!username || !fullName || !sector) {
+            if (!username || !fullName || !password) {
                 showMessage('Por favor, preencha todos os campos corretamente.', 'error');
                 return;
             }
@@ -183,7 +174,7 @@
                         { 
                             nome_usuario: username, 
                             nome_completo: fullName, 
-                            setor: sector 
+                            senha: password 
                         }
                     ]);
 
