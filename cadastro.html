@@ -183,10 +183,14 @@
                 }
 
                 // Feedback visual de sucesso!
-                showMessage('Cadastro realizado com sucesso!', 'success');
+                showMessage('Cadastro realizado com sucesso! Redirecionando para o login...', 'success');
                 
                 // Limpa o formulário após salvar com sucesso
                 form.reset();
+                
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
                 
             } catch (err) {
                 console.error("Erro no cadastro:", err);
