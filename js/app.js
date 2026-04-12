@@ -1,7 +1,7 @@
-function init() {
+async function init() {
     updateDate();
-    loadTransactions();
     setupEventListeners();
+    await loadTransactions();
     updateUI();
 }
 

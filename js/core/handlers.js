@@ -1,7 +1,15 @@
-window.deleteTransaction = function (id) {
+window.deleteTransaction = async function (id) {
     if (confirm('Tem certeza que deseja apagar este lançamento?')) {
+        const t = transactions.find(x => x.id === id);
+        if(!t) return;
+        
+        if(t.dbType === 'Receitas') {
+            await window.supabaseClient.from('Receitas').delete().eq('id', id);
+        } else if (t.dbType === 'Despesas') {
+            await window.supabaseClient.from('Despesas').delete().eq('id', id);
+        }
+
         transactions = transactions.filter(t => t.id !== id);
-        saveTransactions();
         updateUI();
     }
 };
@@ -43,44 +51,76 @@ window.editTransaction = function (id) {
     }
 };
 
-window.markAsPaid = function (id) {
+window.markAsPaid = async function (id) {
     const t = transactions.find(x => x.id === id);
     if (t && t.status === 'Pendente') {
+        const btn = event.target;
+        btn.textContent = '...';
+        btn.disabled = true;
+
+        if(t.dbType === 'Despesas') {
+            await window.supabaseClient.from('Despesas').update({ status: 'Pago' }).eq('id', id);
+        }
         t.status = 'Pago';
-        saveTransactions();
         updateUI();
     }
 };
 
-function addTransaction(data) {
+window.addTransaction = async function(data) {
+    const session = JSON.parse(localStorage.getItem('alfa_session') || '{}');
+    const uId = session.id;
+
     if (editingTransactionId) {
         const index = transactions.findIndex(t => t.id === editingTransactionId);
         if (index !== -1) {
+            const dbType = transactions[index].dbType;
+            let payload = { ...data };
+            delete payload.type; 
+            
+            if(dbType === 'Receitas') {
+                await window.supabaseClient.from('Receitas').update(payload).eq('id', editingTransactionId);
+            } else {
+                await window.supabaseClient.from('Despesas').update(payload).eq('id', editingTransactionId);
+            }
+
             transactions[index] = { ...transactions[index], ...data };
             if (data.date) {
                 const dateStr = data.date.includes('T') ? data.date.split('T')[0] : data.date;
                 localStorage.setItem('last_used_date', dateStr);
             }
-            saveTransactions();
             updateUI();
             editingTransactionId = null;
             return;
         }
     }
 
-    const transaction = {
-        id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 9),
-        ...data,
-        createdAt: new Date().toISOString()
-    };
-    transactions.push(transaction);
-    saveTransactions();
+    // É um registro inteiramente novo
+    let payload = { ...data, user_id: uId };
+    let tableName = (data.type === 'income') ? 'Receitas' : 'Despesas';
+    delete payload.type; 
 
-    // Salvar ultima data para facilitar lançamento
+    const { data: inserted, error } = await window.supabaseClient.from(tableName).insert([payload]).select();
+
+    if(error){
+        alert("Erro ao gravar online: " + error.message);
+        return;
+    }
+
+    if(inserted && inserted.length > 0) {
+        const nRecord = inserted[0];
+        const localFormat = {
+            id: nRecord.id, // ID real gerado pelo Postgres UUID/Bigint
+            dbType: tableName,
+            type: tableName === 'Receitas' ? 'income' : 'expense',
+            ...data
+        };
+        transactions.push(localFormat);
+    }
+
     if (data.date) {
         const dateStr = data.date.includes('T') ? data.date.split('T')[0] : data.date;
         localStorage.setItem('last_used_date', dateStr);
     }
 
     updateUI();
-}
+};
