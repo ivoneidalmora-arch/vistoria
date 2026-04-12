@@ -106,7 +106,7 @@
                 <div id="messageBox" class="hidden rounded-lg p-4 text-sm font-medium text-center"></div>
 
                 <!-- Submit Button -->
-                <button type="submit" id="submitBtn"
+                <button type="button" id="submitBtn"
                     class="w-full bg-brand-600 hover:bg-brand-500 text-white font-semibold py-3 px-4 rounded-lg shadow-lg shadow-brand-500/20 hover:shadow-brand-500/40 transition-all flex justify-center items-center gap-2 group relative">
                     <span id="btnText">Cadastrar</span>
                     <!-- Spinner de Loading (oculto por padrão) -->
@@ -125,10 +125,6 @@
         // ATENÇÃO: Substitua aqui pela sua URL real e Chave Anônima do Supabase
         const SUPABASE_URL = 'https://zlvvkltsefsytzqjorsn.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_dCNKa32V358Zsfpmo1Bj_A_gnfBpsVz';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        // =====================================
-
-        const form = document.getElementById('cadastroForm');
         const submitBtn = document.getElementById('submitBtn');
         const btnText = document.getElementById('btnText');
         const btnSpinner = document.getElementById('btnSpinner');
@@ -144,11 +140,17 @@
             }`;
         }
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            // Oculta a caixa de mensagem anterior
-            messageBox.classList.add('hidden');
+        // Verifica se o Supabase conseguiu ser baixado 
+        if (typeof window.supabase === 'undefined') {
+            showMessage('Erro Crítico: A biblioteca de conexão não carregou. Verifique sua internet, adblocks ou antivírus.', 'error');
+        } else {
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+            submitBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                
+                // Oculta a caixa de mensagem anterior
+                messageBox.classList.add('hidden');
 
             const email = document.getElementById('email').value.trim();
             const fullName = document.getElementById('fullName').value.trim();
@@ -210,6 +212,7 @@
                 btnSpinner.classList.add('hidden');
             }
         });
+        }
     </script>
 </body>
 </html>
