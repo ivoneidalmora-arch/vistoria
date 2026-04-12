@@ -131,12 +131,22 @@ window.importBackup = async function (event) {
                 delete payload.createdAt;
                 delete payload.type;
 
-                // Restaura os fallbacks em caso de json muito cru
+                // Restaura os fallbacks em caso de json muito cru (legado offline)
                 if (t.type === 'income') {
-                    if(!payload.amountLiquido) payload.amountLiquido = payload.amountBruto || payload.amount;
+                    if(!payload.amountLiquido) payload.amountLiquido = payload.amountBruto || payload.amount || 0;
+                    if(!payload.amountBruto) payload.amountBruto = payload.amount || 0;
+                    if(!payload.amount) payload.amount = payload.amountBruto || 0;
+                    if(!payload.placa) payload.placa = 'Sem placa'; 
+                    if(!payload.category) payload.category = 'Outros'; 
+                    if(!payload.date) payload.date = new Date().toISOString().split('T')[0];
                     novasReceitas.push(payload);
                 } else if (t.type === 'expense') {
                     if(!payload.status) payload.status = 'Pago';
+                    if(!payload.vencimento) payload.vencimento = payload.date || new Date().toISOString().split('T')[0];
+                    if(!payload.description) payload.description = 'Registro legado importado';
+                    if(!payload.amount) payload.amount = 0;
+                    if(!payload.category) payload.category = 'Outros';
+                    if(!payload.date) payload.date = new Date().toISOString().split('T')[0];
                     novasDespesas.push(payload);
                 }
             });
