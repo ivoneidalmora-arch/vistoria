@@ -70,7 +70,7 @@
 
         <!-- Login Card -->
         <div class="glass-card rounded-2xl shadow-2xl p-8">
-            <form id="loginForm" class="space-y-6">
+            <form id="loginForm" class="space-y-6" novalidate>
                 <!-- E-mail -->
                 <div>
                     <label for="email" class="block text-sm font-medium text-slate-300 mb-1">E-mail</label>
@@ -91,7 +91,7 @@
                 <div id="messageBox" class="hidden rounded-lg p-4 text-sm font-medium text-center"></div>
 
                 <!-- Submit Button -->
-                <button type="submit" id="submitBtn"
+                <button type="button" id="submitBtn"
                     class="w-full bg-brand-600 hover:bg-brand-500 text-white font-semibold py-3 px-4 rounded-lg shadow-lg hover:shadow-brand-500/40 transition-all flex justify-center items-center gap-2 group relative">
                     <span id="btnText">Entrar no Sistema</span>
                     <!-- Spinner (oculto por padrão) -->
@@ -114,10 +114,6 @@
         // IMPORTANTE: Insira a mesma URL e KEY usada no cadastro.html
         const SUPABASE_URL = 'https://zlvvkltsefsytzqjorsn.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_dCNKa32V358Zsfpmo1Bj_A_gnfBpsVz';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        // =====================================
-
-        const form = document.getElementById('loginForm');
         const submitBtn = document.getElementById('submitBtn');
         const btnText = document.getElementById('btnText');
         const btnSpinner = document.getElementById('btnSpinner');
@@ -132,9 +128,14 @@
             }`;
         }
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            messageBox.classList.add('hidden');
+        if (typeof window.supabase === 'undefined') {
+            showMessage('Erro Crítico: A biblioteca de conexão não carregou.', 'error');
+        } else {
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+            submitBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                messageBox.classList.add('hidden');
 
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
@@ -173,7 +174,9 @@
                 showMessage('Bem-vindo!', 'success');
                 
                 // Redireciona para o financeiro imediatamente
-                window.location.href = 'index.html';
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
                 
             } catch (err) {
                 console.error("Erro no login:", err);
@@ -189,6 +192,7 @@
                 btnSpinner.classList.add('hidden');
             }
         });
+        }
     </script>
 </body>
 </html>
