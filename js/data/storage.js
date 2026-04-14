@@ -30,7 +30,8 @@ window.loadTransactions = async function () {
                     amountLiquido: parseFloat(r.amountLiquido),
                     amount: parseFloat(r.amount),
                     date: r.date,
-                    observacao: r.observacao
+                    observacao: r.observacao,
+                    createdAt: r.created_at || r.date
                 });
             });
         }
@@ -47,7 +48,8 @@ window.loadTransactions = async function () {
                     vencimento: d.vencimento,
                     status: d.status,
                     date: d.date,
-                    observacao: d.observacao
+                    observacao: d.observacao,
+                    createdAt: d.created_at || d.date
                 });
             });
         }

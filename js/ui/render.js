@@ -143,6 +143,12 @@ function calculateStats() {
         }
     });
 
+    // Atualiza DOM com o balanço global (Toda a Vida)
+    if (DOM.globalBalance) {
+        DOM.globalBalance.textContent = formatCurrency(totalBalance);
+        DOM.globalBalance.style.color = totalBalance < 0 ? 'var(--danger)' : 'var(--text-main)';
+    }
+
     // Atualiza DOM com os dados do mês selecionado
     const monthBalance = monthIncomeNet - monthExpense;
     DOM.currentBalance.textContent = formatCurrency(monthBalance);
@@ -224,7 +230,12 @@ function calculateStats() {
 function renderTransactions() {
     DOM.transactionList.innerHTML = '';
 
-    let filtered = [...transactions].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    let filtered = [...transactions].sort((a, b) => {
+        // Fallback to insertion ordering if createdAt exists, otherwise use date
+        const dateA = new Date(a.createdAt || a.date);
+        const dateB = new Date(b.createdAt || b.date);
+        return dateB - dateA;
+    });
 
     // Filtrar por Busca
     if (searchPlaca) {

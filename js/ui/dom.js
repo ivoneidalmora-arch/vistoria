@@ -1,6 +1,7 @@
 // DOM Elements
 const DOM = {
     dateDisplay: document.getElementById('dateDisplay'),
+    globalBalance: document.getElementById('globalBalance'),
     currentBalance: document.getElementById('currentBalance'),
     monthIncome: document.getElementById('monthIncome'),
     monthExpense: document.getElementById('monthExpense'),

@@ -77,10 +77,19 @@
                 </select>
             </div>
             <div class="dashboard-grid">
+                <!-- Novo: Saldo Global -->
+                <div class="stat-card glass-panel stat-balance" style="border-left: 4px solid var(--primary); background: rgba(59, 130, 246, 0.05);">
+                    <div class="stat-icon" style="background: rgba(59, 130, 246, 0.15); color: var(--primary);">🏛️</div>
+                    <div class="stat-info" style="flex: 1;">
+                        <p>Saldo Global (Todo Período)</p>
+                        <h2 id="globalBalance" style="color: var(--primary);">R$ 0,00</h2>
+                        <div style="font-size: 0.85rem; margin-top: 0.4rem; color: var(--text-muted);">Acumulado total</div>
+                    </div>
+                </div>
                 <div class="stat-card glass-panel stat-balance">
                     <div class="stat-icon">💰</div>
                     <div class="stat-info" style="flex: 1;">
-                        <p id="labelBalance">Saldo do Mês</p>
+                        <p id="labelBalance">Balanço do Mês (Entradas - Saídas)</p>
                         <h2 id="currentBalance">R$ 0,00</h2>
                         <div id="balanceDetails"
                             style="font-size: 0.85rem; margin-top: 0.4rem; color: var(--text-muted); display: none;">
@@ -90,14 +99,14 @@
                 <div class="stat-card glass-panel stat-income">
                     <div class="stat-icon">📈</div>
                     <div class="stat-info">
-                        <p>Total Recebido (Mês)</p>
+                        <p>Receitas Brutas (Mês)</p>
                         <h2 id="monthIncome">R$ 0,00</h2>
                     </div>
                 </div>
                 <div class="stat-card glass-panel stat-expense">
                     <div class="stat-icon">📉</div>
                     <div class="stat-info">
-                        <p>Total Saídas (Mês)</p>
+                        <p>Despesas Pagas (Mês)</p>
                         <h2 id="monthExpense">R$ 0,00</h2>
                     </div>
                 </div>
