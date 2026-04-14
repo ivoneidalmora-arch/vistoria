@@ -85,6 +85,7 @@ function calculateStats() {
     let monthIncomeNet = 0;
     let monthIncomeGross = 0;
     let monthExpense = 0;
+    let qtdeLaudos = 0;
 
     // Charts data for selected month grouped by date
     const monthlyData = {
@@ -120,9 +121,10 @@ function calculateStats() {
         const transactionMonthStr = `${tDateObj.getFullYear()}-${String(tDateObj.getMonth() + 1).padStart(2, '0')}`;
 
         if (transactionMonthStr === targetMonth) {
-            if (t.type === 'income') {
+                if (t.type === 'income') {
                 monthIncomeGross += incGross;
                 monthIncomeNet += incNet;
+                qtdeLaudos++;
                 const d = tDateObj.getDate();
                 if (d <= daysInMonth) monthlyData.incomes[d - 1] += incNet;
 
@@ -176,6 +178,18 @@ function calculateStats() {
 
     DOM.monthIncome.textContent = formatCurrency(monthIncomeNet);
     DOM.monthExpense.textContent = formatCurrency(monthExpense);
+
+    if (DOM.qtdeLaudos) {
+        DOM.qtdeLaudos.textContent = qtdeLaudos;
+    }
+    if (DOM.ticketMedio) {
+        const ticketMedio = qtdeLaudos > 0 ? (monthIncomeNet / qtdeLaudos) : 0;
+        DOM.ticketMedio.textContent = formatCurrency(ticketMedio);
+    }
+    
+    // Add monthIncomeNet and monthExpense to monthlyData to generate doughnut charts
+    monthlyData.monthIncomeNet = monthIncomeNet;
+    monthlyData.monthExpense = monthExpense;
 
     const labelTitle = document.getElementById('spanMesAtual');
     if (labelTitle) {

@@ -5,6 +5,8 @@ const DOM = {
     currentBalance: document.getElementById('currentBalance'),
     monthIncome: document.getElementById('monthIncome'),
     monthExpense: document.getElementById('monthExpense'),
+    qtdeLaudos: document.getElementById('qtdeLaudos'),
+    ticketMedio: document.getElementById('ticketMedio'),
     transactionList: document.getElementById('transactionList'),
 
     // VRTE / Values

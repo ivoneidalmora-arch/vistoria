@@ -110,6 +110,21 @@
                         <h2 id="monthExpense">R$ 0,00</h2>
                     </div>
                 </div>
+                <!-- Novo: Laudos e Ticket -->
+                <div class="stat-card glass-panel stat-balance" style="border-left: 4px solid #8b5cf6; background: rgba(139, 92, 246, 0.05);">
+                    <div class="stat-icon" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6;">📋</div>
+                    <div class="stat-info" style="flex: 1;">
+                        <p>Qtde Laudos (Mês)</p>
+                        <h2 id="qtdeLaudos" style="color: #8b5cf6;">0</h2>
+                    </div>
+                </div>
+                <div class="stat-card glass-panel stat-balance" style="border-left: 4px solid #14b8a6; background: rgba(20, 184, 166, 0.05);">
+                    <div class="stat-icon" style="background: rgba(20, 184, 166, 0.15); color: #14b8a6;">🏷️</div>
+                    <div class="stat-info" style="flex: 1;">
+                        <p>Ticket Médio Líq. (Mês)</p>
+                        <h2 id="ticketMedio" style="color: #14b8a6;">R$ 0,00</h2>
+                    </div>
+                </div>
             </div>
 
             <div class="main-content">
@@ -169,8 +184,14 @@
                         <div class="chart-header">
                             <h3>Resumo Financeiro (Este Mês)</h3>
                         </div>
-                        <div class="chart-wrapper">
-                            <canvas id="financeChart"></canvas>
+                        <div class="chart-wrapper" style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                            <div style="flex: 2; min-width: 300px; position: relative;">
+                                <canvas id="financeChart"></canvas>
+                            </div>
+                            <div style="flex: 1; min-width: 250px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-left: 1rem; border-left: 1px solid var(--glass-border);">
+                                <h4 style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;">Balanço (Receitas x Despesas)</h4>
+                                <canvas id="doughnutChart" style="max-height: 250px;"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
