@@ -662,6 +662,7 @@ select option { background: var(--bg-surface); color: var(--text-main); }
 /* Responsive */
 @media (max-width: 1024px) {
     .main-content { grid-template-columns: 1fr; }
+    .inteligencia-grid { grid-template-columns: 1fr !important; }
 }
 
 @media (max-width: 768px) {

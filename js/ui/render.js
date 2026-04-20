@@ -86,6 +86,7 @@ function calculateStats() {
     let monthIncomeGross = 0;
     let monthExpense = 0;
     let qtdeLaudos = 0;
+    const laudosBreakdown = {};
 
     // Charts data for selected month grouped by date
     const monthlyData = {
@@ -125,6 +126,12 @@ function calculateStats() {
                 monthIncomeGross += incGross;
                 monthIncomeNet += incNet;
                 qtdeLaudos++;
+                
+                if (!laudosBreakdown[t.category]) {
+                    laudosBreakdown[t.category] = 0;
+                }
+                laudosBreakdown[t.category]++;
+
                 const d = tDateObj.getDate();
                 if (d <= daysInMonth) monthlyData.incomes[d - 1] += incNet;
 
@@ -132,10 +139,16 @@ function calculateStats() {
                 if (t.cliente && t.cliente.trim() !== '') {
                     const cName = t.cliente.trim().toUpperCase();
                     if (!clientRevenue[cName]) {
-                        clientRevenue[cName] = { bruto: 0, liquido: 0 };
+                        clientRevenue[cName] = { bruto: 0, liquido: 0, qtdeLaudos: 0, laudosBreakdown: {} };
                     }
                     clientRevenue[cName].bruto += incGross;
                     clientRevenue[cName].liquido += incNet;
+                    clientRevenue[cName].qtdeLaudos++;
+                    
+                    if (!clientRevenue[cName].laudosBreakdown[t.category]) {
+                        clientRevenue[cName].laudosBreakdown[t.category] = 0;
+                    }
+                    clientRevenue[cName].laudosBreakdown[t.category]++;
                 }
             } else if (t.status !== 'Pendente') {
                 monthExpense += t.amount;
@@ -182,6 +195,22 @@ function calculateStats() {
     if (DOM.qtdeLaudos) {
         DOM.qtdeLaudos.textContent = qtdeLaudos;
     }
+
+    const laudosBreakdownDOM = document.getElementById('laudosBreakdown');
+    if (laudosBreakdownDOM) {
+        if (qtdeLaudos > 0) {
+            const list = Object.entries(laudosBreakdown)
+                .sort((a,b) => b[1] - a[1])
+                .map(([cat, qtd]) => `<div style="display:flex; justify-content:space-between; font-size: 0.85rem; color: var(--text-main); border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 0.2rem; margin-bottom: 0.2rem; width: 100%;"><span>${cat}</span><span><strong>${qtd}</strong></span></div>`)
+                .join('');
+            laudosBreakdownDOM.innerHTML = `<div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.1); width: 100%; display:flex; flex-direction:column; gap:0.2rem;">${list}</div>`;
+            laudosBreakdownDOM.style.display = 'block';
+        } else {
+            laudosBreakdownDOM.style.display = 'none';
+            laudosBreakdownDOM.innerHTML = '';
+        }
+    }
+
     if (DOM.ticketMedio) {
         const ticketMedio = qtdeLaudos > 0 ? (monthIncomeNet / qtdeLaudos) : 0;
         DOM.ticketMedio.textContent = formatCurrency(ticketMedio);
@@ -214,22 +243,36 @@ function calculateStats() {
                 const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}º`;
                 const isMedal = index < 3;
 
+                const laudosTags = Object.entries(cData.laudosBreakdown)
+                    .sort((a, b) => b[1] - a[1])
+                    .map(([cat, qtd]) => {
+                        let catShort = cat.replace('Vistoria ', '').substring(0, 15);
+                        return `<span style="background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.3); color: #c4b5fd; padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 0.75rem; white-space: nowrap; margin-bottom: 2px;">${qtd}x ${catShort}</span>`;
+                    }).join('');
+
                 return `
-                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.8rem; border-bottom: 1px dashed rgba(255,255,255,0.05);">
-                    <div style="display: flex; align-items: center; gap: 0.8rem; min-width: 0;">
-                        <div style="min-width: 24px; text-align: center; font-size: ${isMedal ? '1.2rem' : '0.9rem'}; color: var(--text-muted); font-weight: bold;">
-                            ${medal}
+                <div style="display: flex; flex-direction:column; padding-bottom: 0.8rem; border-bottom: 1px dashed rgba(255,255,255,0.05);">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
+                        <div style="display: flex; align-items: flex-start; gap: 0.8rem; min-width: 0;">
+                            <div style="min-width: 24px; text-align: center; font-size: ${isMedal ? '1.2rem' : '0.9rem'}; color: var(--text-muted); font-weight: bold; margin-top:2px;">
+                                ${medal}
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:0.4rem;">
+                                <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.95rem; line-height: 1.2; color: var(--text-main); font-weight: 500;" title="${cName}">
+                                    ${cName}
+                                </div>
+                                <div style="display:flex; flex-wrap:wrap; gap:0.35rem;">
+                                    ${laudosTags}
+                                </div>
+                            </div>
                         </div>
-                        <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.95rem; line-height: 1.2;" title="${cName}">
-                            ${cName}
-                        </div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="font-weight: 600; color: var(--text-main); font-size: 0.8rem;">
-                            Bruto: ${formatCurrency(cData.bruto)}
-                        </div>
-                        <div style="font-weight: 600; color: var(--success); font-size: 0.95rem;">
-                            Líq: ${formatCurrency(cData.liquido)}
+                        <div style="text-align: right; min-width: 90px; margin-left: 0.5rem;">
+                            <div style="font-weight: 500; color: var(--text-muted); font-size: 0.8rem;">
+                                Bru: ${formatCurrency(cData.bruto)}
+                            </div>
+                            <div style="font-weight: 600; color: var(--success); font-size: 0.95rem;">
+                                Líq: ${formatCurrency(cData.liquido)}
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -76,62 +76,49 @@
                     style="padding: 0.5rem 1rem; border-radius: 8px; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-family: inherit; font-size: 1rem; cursor: pointer; min-width: 180px; flex: 1; max-width: 300px;">
                 </select>
             </div>
-            <div class="dashboard-grid">
-                <!-- Novo: Saldo Global -->
-                <div class="stat-card glass-panel stat-balance" style="border-left: 4px solid var(--primary); background: rgba(59, 130, 246, 0.05);">
-                    <div class="stat-icon" style="background: rgba(59, 130, 246, 0.15); color: var(--primary);">🏛️</div>
-                    <div class="stat-info" style="flex: 1;">
-                        <p>Saldo Global (Todo Período)</p>
-                        <h2 id="globalBalance" style="color: var(--primary);">R$ 0,00</h2>
-                        <div style="font-size: 0.85rem; margin-top: 0.4rem; color: var(--text-muted);">Acumulado total</div>
+            <section class="dashboard-section" style="margin-bottom: 2rem;">
+                <div class="dashboard-grid">
+                    <!-- Saldo Global -->
+                    <div class="stat-card glass-panel stat-balance" style="border-left: 4px solid var(--primary); background: rgba(59, 130, 246, 0.05);">
+                        <div class="stat-icon" style="background: rgba(59, 130, 246, 0.15); color: var(--primary);">🏛️</div>
+                        <div class="stat-info" style="flex: 1;">
+                            <p>Saldo Global (Todo Período)</p>
+                            <h2 id="globalBalance" style="color: var(--primary);">R$ 0,00</h2>
+                            <div style="font-size: 0.85rem; margin-top: 0.4rem; color: var(--text-muted);">Acumulado total</div>
+                        </div>
                     </div>
-                </div>
-                <div class="stat-card glass-panel stat-balance">
-                    <div class="stat-icon">💰</div>
-                    <div class="stat-info" style="flex: 1;">
-                        <p id="labelBalance">Balanço do Mês (Entradas - Saídas)</p>
-                        <h2 id="currentBalance">R$ 0,00</h2>
-                        <div id="balanceDetails"
-                            style="font-size: 0.85rem; margin-top: 0.4rem; color: var(--text-muted); display: none;">
+                    <div class="stat-card glass-panel stat-balance">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-info" style="flex: 1;">
+                            <p id="labelBalance">Balanço do Mês (Entradas - Saídas)</p>
+                            <h2 id="currentBalance">R$ 0,00</h2>
+                            <div id="balanceDetails"
+                                style="font-size: 0.85rem; margin-top: 0.4rem; color: var(--text-muted); display: none;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-panel stat-income">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-info">
+                            <p>Receitas Brutas (Mês)</p>
+                            <h2 id="monthIncome">R$ 0,00</h2>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-panel stat-expense">
+                        <div class="stat-icon">📉</div>
+                        <div class="stat-info">
+                            <p>Despesas Pagas (Mês)</p>
+                            <h2 id="monthExpense">R$ 0,00</h2>
                         </div>
                     </div>
                 </div>
-                <div class="stat-card glass-panel stat-income">
-                    <div class="stat-icon">📈</div>
-                    <div class="stat-info">
-                        <p>Receitas Brutas (Mês)</p>
-                        <h2 id="monthIncome">R$ 0,00</h2>
-                    </div>
-                </div>
-                <div class="stat-card glass-panel stat-expense">
-                    <div class="stat-icon">📉</div>
-                    <div class="stat-info">
-                        <p>Despesas Pagas (Mês)</p>
-                        <h2 id="monthExpense">R$ 0,00</h2>
-                    </div>
-                </div>
-                <!-- Novo: Laudos e Ticket -->
-                <div class="stat-card glass-panel stat-balance" style="border-left: 4px solid #8b5cf6; background: rgba(139, 92, 246, 0.05);">
-                    <div class="stat-icon" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6;">📋</div>
-                    <div class="stat-info" style="flex: 1;">
-                        <p>Qtde Laudos (Mês)</p>
-                        <h2 id="qtdeLaudos" style="color: #8b5cf6;">0</h2>
-                    </div>
-                </div>
-                <div class="stat-card glass-panel stat-balance" style="border-left: 4px solid #14b8a6; background: rgba(20, 184, 166, 0.05);">
-                    <div class="stat-icon" style="background: rgba(20, 184, 166, 0.15); color: #14b8a6;">🏷️</div>
-                    <div class="stat-info" style="flex: 1;">
-                        <p>Ticket Médio Líq. (Mês)</p>
-                        <h2 id="ticketMedio" style="color: #14b8a6;">R$ 0,00</h2>
-                    </div>
-                </div>
-            </div>
+            </section>
 
-            <div class="main-content">
-                <!-- Coluna Esquerda: Ações e Gráfico -->
-                <div class="col-left">
-                    <div class="action-buttons glass-panel">
-                        <h2>Ações Rápidas</h2>
+            <!-- SEÇÃO: Operacional e Ações -->
+            <section class="dashboard-section mt-4" style="margin-top: 2rem;">
+                <div class="inteligencia-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; align-items: stretch;">
+                    <div class="action-buttons glass-panel" style="padding: 2rem;">
+                        <h2 style="font-size: 1.25rem; font-weight: 500; margin-bottom: 1.5rem;">Ações Rápidas</h2>
                         <div class="btn-group-main">
                             <button class="btn btn-primary btn-lg" onclick="window.openModal('vistoriaModal')">
                                 <span class="btn-icon">+</span> Nova Vistoria
@@ -164,25 +151,35 @@
                         </div>
                     </div>
 
-                    <!-- Ranking Clientes -->
-                    <div class="glass-panel" style="margin-top: 2rem; margin-bottom: 2rem;">
-                        <div class="list-header"
-                            style="border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 1rem; padding-bottom: 1rem;">
-                            <h3 style="margin: 0; font-size: 1.1rem; font-weight: 500;">Top 10 Clientes (Mês)</h3>
-                            <span style="font-size: 0.85rem; color: var(--text-muted);">Faturamento Líquido</span>
+                    <!-- Coluna Métricas de Laudos -->
+                    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        <div class="stat-card glass-panel stat-balance" style="border-left: 4px solid #8b5cf6; background: rgba(139, 92, 246, 0.05); flex-direction: column; align-items: flex-start;">
+                            <div style="display: flex; align-items: center; gap: 1.5rem; width: 100%;">
+                                <div class="stat-icon" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6;">📋</div>
+                                <div class="stat-info" style="flex: 1;">
+                                    <p>Qtde Laudos (Mês)</p>
+                                    <h2 id="qtdeLaudos" style="color: #8b5cf6;">0</h2>
+                                </div>
+                            </div>
+                            <div id="laudosBreakdown" style="width: 100%; display: none;"></div>
                         </div>
-                        <div id="topClientsList" style="display: flex; flex-direction: column; gap: 0.8rem;">
-                            <!-- JS vai injetar ranking aqui -->
-                            <div
-                                style="text-align: center; color: var(--text-muted); padding: 2rem 0; font-size: 0.9rem;">
-                                Nenhum cliente registrado neste mês.
+                        <div class="stat-card glass-panel stat-balance" style="border-left: 4px solid #14b8a6; background: rgba(20, 184, 166, 0.05); flex: 1;">
+                            <div class="stat-icon" style="background: rgba(20, 184, 166, 0.15); color: #14b8a6;">🏷️</div>
+                            <div class="stat-info" style="flex: 1;">
+                                <p>Ticket Médio Líq. (Mês)</p>
+                                <h2 id="ticketMedio" style="color: #14b8a6;">R$ 0,00</h2>
                             </div>
                         </div>
                     </div>
+                </div>
+            </section>
 
+            <!-- SEÇÃO: Inteligência -->
+            <section class="dashboard-section mt-4" style="margin-top: 2rem;">
+                <div class="inteligencia-grid" style="display: grid; grid-template-columns: 3fr 2fr; gap: 1.5rem; align-items: stretch;">
                     <div class="chart-container glass-panel">
                         <div class="chart-header">
-                            <h3>Resumo Financeiro (Este Mês)</h3>
+                            <h3 style="margin: 0 0 1.5rem 0; font-size: 1.1rem; font-weight: 500;">Resumo Financeiro (Este Mês)</h3>
                         </div>
                         <div class="chart-wrapper" style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
                             <div style="flex: 2; min-width: 300px; position: relative;">
@@ -194,12 +191,29 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Coluna Direita: Histórico -->
-                <div class="col-right glass-panel">
-                    <div class="list-header" style="flex-wrap: wrap; gap: 1rem;">
-                        <h3>Histórico de Caixa</h3>
+                    <!-- Ranking Clientes -->
+                    <div class="glass-panel" style="padding: 2rem;">
+                        <div class="list-header"
+                            style="border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 1rem; padding-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="margin: 0; font-size: 1.1rem; font-weight: 500;">Top 10 Clientes (Mês)</h3>
+                            <span style="font-size: 0.85rem; color: var(--text-muted);">Faturamento Líquido</span>
+                        </div>
+                        <div id="topClientsList" style="display: flex; flex-direction: column; gap: 0.8rem; max-height: 400px; overflow-y: auto; padding-right: 0.5rem;">
+                            <div
+                                style="text-align: center; color: var(--text-muted); padding: 2rem 0; font-size: 0.9rem;">
+                                Nenhum cliente registrado neste mês.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+             <!-- SEÇÃO: Histórico de Caixa -->
+             <section class="dashboard-section mt-4" style="margin-top: 2rem; margin-bottom: 2rem;">
+                <div class="col-right glass-panel" style="padding: 2rem;">
+                    <div class="list-header" style="flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 1.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="font-size: 1.25rem; font-weight: 600; margin: 0;">Histórico de Caixa</h3>
                         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                             <input type="text" id="searchPlaca" class="search-input" placeholder="Placa..."
                                 style="width: 100px; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-size: 0.9rem; font-family: inherit;">
@@ -222,7 +236,6 @@
                                 </tr>
                             </thead>
                             <tbody id="transactionList">
-                                <!-- JS vai injetar linhas aqui -->
                             </tbody>
                         </table>
                     </div>
@@ -238,7 +251,7 @@
                             style="padding: 0.4rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem;">Próxima</button>
                     </div>
                 </div>
-            </div>
+            </section>
         </main>
     </div>
 
